@@ -172,7 +172,7 @@ class CustomDims(BaseDims):
 
 def fullsize_dims():
     """ Create 'fullsize' dimensions. """
-    return FixedDims(left=0., right=100., bottom=0., top=100., aspect=20/40,
+    return FixedDims(left=0., right=100., bottom=0., top=100., aspect=20./40.,
                      width=100., length=100., pitch_width=20., pitch_length=40.,
                      korf_offset=.04, korf_width=.4, korf_length=.4,
                      twofifty_width=2.5, twofifty_length=2.5,
@@ -214,5 +214,7 @@ def create_pitch_dims(pitch_type, pitch_width=None, pitch_length=None, post_dist
     if pitch_type == 'fullsize':
         return fullsize_dims()
     if pitch_type == 'custom':
+        if post_distance is None:
+            post_distance = pitch_length / 6
         return custom_dims(pitch_width, pitch_length, post_distance)
     return custom_dims(pitch_width, pitch_length, post_distance)
