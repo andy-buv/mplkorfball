@@ -79,6 +79,7 @@ class BaseDims:
     freepass_right: Optional[float] = None
     center_width: Optional[float] = None
     center_length: Optional[float] = None
+
     # defined in pitch_markings
     x_markings_sorted: Optional[np.array] = None
     y_markings_sorted: Optional[np.array] = None

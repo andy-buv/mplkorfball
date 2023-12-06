@@ -113,8 +113,8 @@ class BasePitch(ABC):
                  linestyle=None, line_zorder=0.9, spot_scale=0.002,
                  pad_left=None, pad_right=None, pad_bottom=None, pad_top=None,
                  pitch_length=None, pitch_width=None,
-                 korf_color='y', korf_alpha=1, korf_linestyle=None, korf_diameter=None,
-                 post_color='gray', post_alpha=1, post_linestyle=None, post_diameter=None,
+                 korf_color='y', korf_alpha=1, korf_linestyle=None, korf_diameter=.4,
+                 post_color='gray', post_alpha=1, post_linestyle=None, post_diameter=0.04,
                  axis=False, label=False, tick=False):
 
         # initialize attributes
@@ -261,8 +261,6 @@ class BasePitch(ABC):
         self.diameter2 = self.dim.twofifty_width * 2
         self.diameter_spot1 = self.spot_scale * self.dim.length * 2
         self.diameter_spot2 = self.spot_scale * self.dim.length * 2
-        self.diameter_corner1 = self.dim.corner_diameter
-        self.diameter_corner2 = self.dim.corner_diameter
         self.arc1_theta1 = self.dim.arc
         self.arc1_theta2 = -self.dim.arc
         self.arc2_theta1 = 180 + self.dim.arc
@@ -306,7 +304,7 @@ class BasePitch(ABC):
 
     def _init_circles_and_arcs_equal_aspect(self, ax):
 
-        radius_freepass = self.dim.diameter1 / 2
+        radius_freepass = self.diameter1 / 2
         radius_post = self.dim.post_diameter / 2
 
         (self.diameter1,
@@ -389,12 +387,14 @@ class BasePitch(ABC):
         return fig, axs
 
     def _draw_ax(self, ax):
+        self._init_circles_and_arcs()
         if self.arc1_theta1 is None:
             self._init_circles_and_arcs_equal_aspect(ax)
         self._set_axes(ax)
         self._set_background(ax)
         self._draw_pitch_markings(ax)
-        self._draw_korfs(ax)
+        # self._draw_korfs(ax)
+        # TODO fix self._draw_korfs(ax)
 
     def _set_axes(self, ax):
         # set axis on/off, labels, grid, and ticks

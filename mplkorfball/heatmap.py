@@ -6,7 +6,7 @@ from functools import partial
 import numpy as np
 from scipy.stats import binned_statistic_2d, circmean
 
-from mplsoccer.utils import validate_ax
+from mplkorfball.utils import validate_ax
 
 _BinnedStatisticResult = namedtuple('BinnedStatisticResult',
                                     ('statistic', 'x_grid', 'y_grid',

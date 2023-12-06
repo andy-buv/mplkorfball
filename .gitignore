@@ -4,3 +4,5 @@
 /mplsoccer/
 /.idea/*
 *.xml
+/notebooks/
+/notebooks/*
