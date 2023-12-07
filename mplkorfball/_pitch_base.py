@@ -108,7 +108,7 @@ class BasePitch(ABC):
         Whether to include corner arcs.
     """
 
-    def __init__(self, pitch_type='fullsize', half=False,
+    def __init__(self, pitch_type='ikf', half=False,
                  pitch_color=None, line_color=None, line_alpha=1, linewidth=2,
                  linestyle=None, line_zorder=0.9, spot_scale=0.002,
                  pad_left=None, pad_right=None, pad_bottom=None, pad_top=None,
@@ -177,7 +177,7 @@ class BasePitch(ABC):
         self._validation_checks()
 
         self.standardizer = Standardizer(pitch_from=pitch_type, width_from=pitch_width,
-                                         length_from=pitch_length, pitch_to='fullsize')
+                                         length_from=pitch_length, pitch_to='ikf')
         # set pitch dimensions
         self.dim = dimensions.create_pitch_dims(pitch_type, pitch_width, pitch_length)
 
@@ -263,8 +263,8 @@ class BasePitch(ABC):
         self.diameter_spot2 = self.spot_scale * self.dim.length * 2
         self.arc1_theta1 = self.dim.arc
         self.arc1_theta2 = -self.dim.arc
-        self.arc2_theta1 = 180 + self.dim.arc
-        self.arc2_theta2 = 180 - self.dim.arc
+        self.arc2_theta1 = -self.dim.arc
+        self.arc2_theta2 = self.dim.arc
 
     def _diameter_circle_equal_aspect(self, x, y, ax, radius):
         # coordinates of center/ perimeter

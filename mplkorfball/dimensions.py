@@ -38,7 +38,7 @@ import numpy as np
 from typing import Optional
 
 
-valid = ['fullsize', 'custom']
+valid = ['ikf', 'custom']
 size_varies = ['custom']
 
 
@@ -47,12 +47,13 @@ class BaseDims:
     """ Base dataclass to hold pitch dimensions."""
     pitch_width: float
     pitch_length: float
+    korf_offset: float
     korf_width: float
     korf_length: float
     twofifty_width: float
     twofifty_length: float
-    korf_offset: float
     arc: Optional[float]
+
     invert_y: bool
     origin_center: bool
 
@@ -111,7 +112,7 @@ class BaseDims:
         """ Create the penalty area dimensions. This is used to calculate the dimensions inside the
         penalty areas for pitches with varying dimensions (width and length varies)."""
         self.penalty_right = self.right - self.penalty_left
-        neg_if_inverted = -1 / 2 if self.invert_y else 1 / 2
+        neg_if_inverted = -1 if self.invert_y else 1
         self.penalty_area_bottom = self.center_width - (neg_if_inverted * self.twofifty_width)
         self.penalty_area_top = self.center_width + (neg_if_inverted * self.twofifty_width)
 
@@ -119,7 +120,7 @@ class BaseDims:
 @dataclass
 class FixedDims(BaseDims):
     """ Dataclass holding the dimensions for pitches with fixed dimensions:
-     'fullsize' and ... ."""
+     'ikf' and ... ."""
 
     def __post_init__(self):
         self.setup_dims()
@@ -155,32 +156,38 @@ class VariableCenterDims(BaseDims):
 class CustomDims(BaseDims):
     """ Dataclass holding the dimension for the custom pitch.
     This is a pitch where the dimensions (width/length) vary and the origin ins (left, bottom)."""
+    post_distance: InitVar[float] = None
 
-    def __post_init__(self):
+    def __post_init__(self, post_distance):
 
         self.right = self.pitch_length
         self.top = self.pitch_width
-        self.post_left = self.left + self.post_distance  # change this to be posts?
+        self.post_left = self.left + post_distance  # TODO change this to be posts?
+        self.post_right = self.right - self.post_left
         self.center_width = self.pitch_width / 2
         self.center_length = self.pitch_length / 2
         self.korf_left = self.post_left + self.korf_offset + self.korf_length / 2
         self.korf_right = self.right - self.korf_left
-
+        self.penalty_left = self.post_left + self.twofifty_length
         self.penalty_area_dims()
         self.setup_dims()
 
 
-def fullsize_dims():
-    """ Create 'fullsize' dimensions. """
-    return FixedDims(left=0., right=100., bottom=0., top=100., aspect=20./40.,
-                     width=100., length=100., pitch_width=20., pitch_length=40.,
+def ikf_dims():
+    """ Create 'ikf' dimensions. """
+    return FixedDims(pitch_width=20., pitch_length=40.,
                      korf_offset=.04, korf_width=.4, korf_length=.4,
-                     twofifty_width=2.5, twofifty_length=2.5,
-                     post_left=6.67, post_right=33.33, post_distance=6.67,
+                     twofifty_width=2.5, twofifty_length=2.5, arc=90,
+                     invert_y=False, origin_center=False,
+                     left=0., right=40., bottom=0., top=20., aspect=1.,
+                     width=20., length=40., post_distance=6.67,
+                     post_left=6.67, post_right=33.33, korf_left=6.9, korf_right=33.50,
                      penalty_left=9.17, penalty_right=30.83,
-                     penalty_area_bottom=17.5, penalty_area_top=22.5,
-                     center_width=20., center_length=20.,
-                     arc=90, invert_y=False, origin_center=False)
+                     penalty_area_top=12.5, penalty_area_bottom=7.5,
+                     penalty_area_left=4.17, penalty_area_right=15.83,
+                     freepass_left=11.67, freepass_right=28.33,
+                     center_width=10., center_length=20.,
+                     )
 
 
 def custom_dims(pitch_width, pitch_length, post_distance):
@@ -199,7 +206,7 @@ def create_pitch_dims(pitch_type, pitch_width=None, pitch_length=None, post_dist
         ----------
         pitch_type : str
             The pitch type used in the plot.
-            The supported pitch types are: 'fullsize', and 'custom'.
+            The supported pitch types are: 'ikf', and 'custom'.
         pitch_length : float, default None
             The pitch length in meters. Only used for the 'custom' pitch_type.
         pitch_width : float, default None
@@ -211,8 +218,8 @@ def create_pitch_dims(pitch_type, pitch_width=None, pitch_length=None, post_dist
         dataclass
             A dataclass holding the pitch dimensions.
         """
-    if pitch_type == 'fullsize':
-        return fullsize_dims()
+    if pitch_type == 'ikf':
+        return ikf_dims()
     if pitch_type == 'custom':
         if post_distance is None:
             post_distance = pitch_length / 6
