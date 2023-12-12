@@ -71,8 +71,8 @@ class Pitch(BasePitchPlot):
         arc = patches.Arc((x, y), width, height, theta1=theta1, theta2=theta2, **kwargs)
         ax.add_patch(arc)
 
-    def _draw_annulus(self, ax, x, y, width, height, **kwargs):
-        annulus = patches.Annulus((x, y), (width, height), 0.05, **kwargs)
+    def _draw_annulus(self, ax, x, y, radius, width, **kwargs):
+        annulus = patches.Annulus((x, y), radius, width, **kwargs)
         # TODO reconfigure annulus.width variable from 0.05 to a self.korf_thickness variable
         ax.add_patch(annulus)
 
@@ -152,8 +152,8 @@ class VerticalPitch(BasePitchPlot):
         arc = patches.Arc((y, x), height, width, theta1=theta1 + 90, theta2=theta2 + 90, **kwargs)
         ax.add_patch(arc)
 
-    def _draw_annulus(self, ax, x, y, width, height, **kwargs):
-        annulus = patches.Annulus((y, x), (height, width), 0.05, **kwargs)
+    def _draw_annulus(self, ax, x, y, radius, width,  **kwargs):
+        annulus = patches.Annulus((y, x), radius, width, **kwargs)
         #TODO reconfigure annulus.width variable from 0.05 to a self.korf_thickness variable
         ax.add_patch(annulus)
 

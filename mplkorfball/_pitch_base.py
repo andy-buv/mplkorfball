@@ -140,6 +140,7 @@ class BasePitch(ABC):
         self.pad_top = pad_top
         self.pitch_length = pitch_length
         self.pitch_width = pitch_width
+        # TODO Add penalty/freepass line_style, color, alpha
         self.korf_color = korf_color
         self.korf_alpha = korf_alpha
         self.korf_linestyle = korf_linestyle
@@ -393,7 +394,7 @@ class BasePitch(ABC):
         self._set_axes(ax)
         self._set_background(ax)
         self._draw_pitch_markings(ax)
-        # self._draw_korfs(ax)
+        self._draw_korfs(ax)
         # TODO fix self._draw_korfs(ax)
 
     def _set_axes(self, ax):
@@ -418,10 +419,15 @@ class BasePitch(ABC):
         # if we use rectangles here then the linestyle isn't consistent around the pitch
         # as sometimes the rectangles overlap with each other and the gaps between
         # lines can when they overlap can look like a solid line even with -. linestyles.
-        line_prop = {'linewidth': self.linewidth, 'alpha': self.line_alpha,
-                     'color': self.line_color, 'zorder': self.line_zorder,
-                     'linestyle': self.linestyle,
-                     }
+        outer_line_prop = {'linewidth': self.linewidth, 'alpha': self.line_alpha,
+                           'color': self.line_color, 'zorder': self.line_zorder,
+                           'linestyle': self.linestyle,
+                           }
+        # TODO update penalty_line_prop with variabels
+        penalty_line_prop = {'linewidth': self.linewidth, 'alpha': self.line_alpha,
+                             'color': 'blue', 'zorder': self.line_zorder,
+                             'linestyle': '--'}
+
         # main markings (outside of pitch and center line)
         xs_main = [self.dim.center_length, self.dim.center_length, self.dim.right,
                    self.dim.right, self.dim.left, self.dim.left, self.dim.center_length,
@@ -429,37 +435,36 @@ class BasePitch(ABC):
         ys_main = [self.dim.bottom, self.dim.top, self.dim.top,
                    self.dim.bottom, self.dim.bottom, self.dim.top, self.dim.top,
                    ]
-        self._draw_line(ax, xs_main, ys_main, **line_prop)
+        self._draw_line(ax, xs_main, ys_main, **outer_line_prop)
         # penalty lines
         xs_pline_left = [self.dim.post_left, self.dim.penalty_left]
         xs_pline_right = [self.dim.penalty_right, self.dim.post_right]
         ys_pline_top = [self.dim.penalty_area_top, self.dim.penalty_area_top]
         ys_pline_bottom = [self.dim.penalty_area_bottom, self.dim.penalty_area_bottom]
 
-        self._draw_line(ax, xs_pline_left, ys_pline_top, **line_prop)
-        self._draw_line(ax, xs_pline_left, ys_pline_bottom, **line_prop)
-        self._draw_line(ax, xs_pline_right, ys_pline_top, **line_prop)
-        self._draw_line(ax, xs_pline_right, ys_pline_bottom, **line_prop)
+        self._draw_line(ax, xs_pline_left, ys_pline_top, **penalty_line_prop)
+        self._draw_line(ax, xs_pline_left, ys_pline_bottom, **penalty_line_prop)
+        self._draw_line(ax, xs_pline_right, ys_pline_top, **penalty_line_prop)
+        self._draw_line(ax, xs_pline_right, ys_pline_bottom, **penalty_line_prop)
         self._draw_circles_and_arcs(ax)
 
     def _draw_circles_and_arcs(self, ax):
-        circ_prop = {'fill': False, 'linewidth': self.linewidth, 'alpha': self.line_alpha,
-                     'color': self.line_color, 'zorder': self.line_zorder,
-                     'linestyle': self.linestyle,
-                     }
+        penalty_line_prop = {'fill': False, 'linewidth': self.linewidth, 'alpha': self.line_alpha,
+                             'color': 'blue', 'zorder': self.line_zorder,
+                             'linestyle': '--'}
 
         # draw free pass area circle and penalty arcs
         self._draw_ellipse(ax, self.dim.penalty_left, self.dim.center_width, self.diameter1,
-                           self.diameter2, **circ_prop)
+                           self.diameter2, **penalty_line_prop)
         self._draw_ellipse(ax, self.dim.penalty_right, self.dim.center_width, self.diameter1,
-                           self.diameter2, **circ_prop)
+                           self.diameter2, **penalty_line_prop)
 
         self._draw_arc(ax, self.dim.post_left, self.dim.center_width,
                        self.diameter1, self.diameter2,
-                       theta1=self.arc1_theta1, theta2=self.arc1_theta2, **circ_prop)
+                       theta1=self.arc1_theta1, theta2=self.arc1_theta2, **penalty_line_prop)
         self._draw_arc(ax, self.dim.post_right, self.dim.center_width,
                        self.diameter1, self.diameter2,
-                       theta1=self.arc2_theta1, theta2=self.arc2_theta2, **circ_prop)
+                       theta1=self.arc2_theta1, theta2=self.arc2_theta2, **penalty_line_prop)
 
         # draw center and penalty spots
         if self.spot_scale > 0:
@@ -495,7 +500,7 @@ class BasePitch(ABC):
                                **post_prop)
 
         for korf in korfs:
-            self._draw_annulus(ax, korf[0], korf[1], self.diameter_korf1, self.diameter_korf2,
+            self._draw_annulus(ax, korf[0], korf[1], 0.225, 0.025,
                                **korf_prop)
 
     def _set_multiple_attributes(self, kwargs):
