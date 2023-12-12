@@ -109,11 +109,12 @@ class BasePitch(ABC):
     """
 
     def __init__(self, pitch_type='ikf', half=False,
-                 pitch_color=None, line_color=None, line_alpha=1, linewidth=2,
+                 pitch_color=None, line_color=None, line_alpha=1, linewidth=1,
                  linestyle=None, line_zorder=0.9, spot_scale=0.002,
                  pad_left=None, pad_right=None, pad_bottom=None, pad_top=None,
                  pitch_length=None, pitch_width=None,
                  korf_color='y', korf_alpha=1, korf_linestyle=None, korf_diameter=.4,
+                 penalty_color=None, penalty_linestyle=None, penalty_alpha=0,
                  post_color='gray', post_alpha=1, post_linestyle=None, post_diameter=0.04,
                  axis=False, label=False, tick=False):
 
@@ -141,6 +142,9 @@ class BasePitch(ABC):
         self.pitch_length = pitch_length
         self.pitch_width = pitch_width
         # TODO Add penalty/freepass line_style, color, alpha
+        self.penalty_color = penalty_color
+        self.penalty_linestyle = penalty_linestyle
+        self.penalty_alpha = penalty_alpha
         self.korf_color = korf_color
         self.korf_alpha = korf_alpha
         self.korf_linestyle = korf_linestyle
@@ -424,9 +428,9 @@ class BasePitch(ABC):
                            'linestyle': self.linestyle,
                            }
         # TODO update penalty_line_prop with variabels
-        penalty_line_prop = {'linewidth': self.linewidth, 'alpha': self.line_alpha,
-                             'color': 'blue', 'zorder': self.line_zorder,
-                             'linestyle': '--'}
+        penalty_line_prop = {'linewidth': self.linewidth, 'alpha': self.penalty_alpha,
+                             'color': self.penalty_color, 'zorder': self.line_zorder,
+                             'linestyle': self.penalty_linestyle}
 
         # main markings (outside of pitch and center line)
         xs_main = [self.dim.center_length, self.dim.center_length, self.dim.right,
@@ -449,9 +453,9 @@ class BasePitch(ABC):
         self._draw_circles_and_arcs(ax)
 
     def _draw_circles_and_arcs(self, ax):
-        penalty_line_prop = {'fill': False, 'linewidth': self.linewidth, 'alpha': self.line_alpha,
-                             'color': 'blue', 'zorder': self.line_zorder,
-                             'linestyle': '--'}
+        penalty_line_prop = {'fill': False, 'linewidth': self.linewidth, 'alpha': self.penalty_alpha,
+                             'color': self.penalty_color, 'zorder': self.line_zorder,
+                             'linestyle': self.penalty_linestyle}
 
         # draw free pass area circle and penalty arcs
         self._draw_ellipse(ax, self.dim.penalty_left, self.dim.center_width, self.diameter1,
