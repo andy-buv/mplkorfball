@@ -48,7 +48,7 @@ def add_image(image, fig, left, bottom, width=None, height=None, **kwargs):
     --------
     >>> import matplotlib.pyplot as plt
     >>> from PIL import Image
-    >>> from mplsoccer import add_image
+    >>> from mplkorfball import add_image
     >>> from urllib.request import urlopen
     >>> fig, ax = plt.subplots()
     >>> image_url = 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Messi_vs_Nigeria_2018.jpg'
@@ -108,7 +108,7 @@ def inset_image(x, y, image, width=None, height=None, vertical=False, ax=None, *
     >>> import matplotlib.pyplot as plt
     >>> from PIL import Image
     >>> from urllib.request import urlopen
-    >>> from mplsoccer import inset_image
+    >>> from mplkorfball import inset_image
     >>> fig, ax = plt.subplots()
     >>> image_url = 'https://upload.wikimedia.org/wikipedia/commons/b/b8/Messi_vs_Nigeria_2018.jpg'
     >>> image = urlopen(image_url)
@@ -203,7 +203,7 @@ def inset_axes(x, y, width=None, height=None, aspect=None, polar=False, vertical
 
     Examples
     --------
-    >>> from mplsoccer import inset_axes
+    >>> from mplkorfball import inset_axes
     >>> import matplotlib.pyplot as plt
     >>> fig, ax = plt.subplots()
     >>> inset_ax = inset_axes(0.5, 0.5, height=0.2, aspect=1, ax=ax)
@@ -443,7 +443,7 @@ class FontManager:
 
     Examples
     --------
-    >>> from mplsoccer import FontManager
+    >>> from mplkorfball import FontManager
     >>> import matplotlib.pyplot as plt
     >>> font_url = 'https://raw.githubusercontent.com/google/fonts/main/ofl/abel/Abel-Regular.ttf'
     >>> fm = FontManager(url=font_url)

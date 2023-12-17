@@ -28,8 +28,8 @@ def bin_statistic(x, y, values=None, dim=None, statistic='count',
     x, y, values : array-like or scalar.
         Commonly, these parameters are 1D arrays.
         If the statistic is 'count' then values are ignored.
-    dim : mplsoccer pitch dimensions
-        One of FixedDims, MetricasportsDims, VariableCenterDims, or CustomDims.
+    dim : mplkorfball pitch dimensions
+        One of FixedDims, VariableCenterDims, or CustomDims.
         Automatically populated when using Pitch/ VerticalPitch class
     statistic : string or callable, optional
         The statistic to compute (default is 'count').

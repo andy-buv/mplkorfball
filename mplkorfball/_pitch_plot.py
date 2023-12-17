@@ -645,6 +645,7 @@ class BasePitchPlot(BasePitch):
 
         angle = np.arctan2(-y_dist, x_dist)
         # if negative angle make positive angle, so goes from 0 to 2 * pi
+        # TODO uncomment?
         #angle[angle < 0] = 2 * np.pi + angle[angle < 0]
 
         if degrees:

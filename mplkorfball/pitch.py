@@ -1,4 +1,4 @@
-""" Module containing: Pitch and VerticalPitch, which are used to plot pitches in mplsoccer"""
+""" Module containing: Pitch and VerticalPitch, which are used to plot pitches in mplkorfball"""
 
 import numpy as np
 from matplotlib import patches

@@ -64,7 +64,7 @@ class BasePitch(ABC):
 
     post_diameter1, post_diameter_2: float, default None
 
-    post_color: any Matplotlib color, default None
+    post_color: any Matplotlib color, default 'gray'
         The color of the post circles drawn on the pitch.
     post_alpha: float, default 1
         The transparency of the post markings.
@@ -73,9 +73,9 @@ class BasePitch(ABC):
         {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
         see: https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
 
-    korf_diameter1, korf_diameter_2: float, default None
+    korf_diameter1, korf_diameter_2: float, default .4
 
-    korf_color: any Matplotlib color, default None
+    korf_color: any Matplotlib color, default 'y'
         The color of the korf rings drawn on the pitch.
     korf_alpha: float, default 1
         The transparency of the korf markings.
@@ -327,7 +327,7 @@ class BasePitch(ABC):
 
     def draw(self, ax=None, figsize=None, nrows=1, ncols=1,
              tight_layout=True, constrained_layout=False):
-        """ Draws the specified soccer/ football pitch(es).
+        """ Draws the specified korfball pitch(es).
         If an ax is specified the pitch is drawn on an existing axis.
 
         Parameters
@@ -992,7 +992,7 @@ class BasePitch(ABC):
     @abstractmethod
     def scatter(self, x, y, rotation_degrees=None, marker=None, ax=None, **kwargs):
         """ Implement a wrapper for matplotlib.axes.Axes.scatter, while adding additional
-        features for rotating markers and plotting footballs."""
+        features for rotating markers and plotting korfballs."""
 
     @abstractmethod
     def _reflect_2d(self, x, y, standardized=False):

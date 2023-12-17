@@ -1,7 +1,7 @@
 """`mplkorfball.scatterutils` is a python module containing Matplotlib
 markers and a function to rotate markers."""
 
-# Authors: Andrew Rowlinson, https://twitter.com/numberstorm
+# Authors: Andrew Rowlinson, https://twitter.com/numberstorm, Andrew Bovey
 # License: MIT
 
 import inspect
@@ -15,7 +15,7 @@ from matplotlib.legend_handler import HandlerPathCollection
 __all__ = ['scatter_korfball', 'scatter_rotation', 'arrowhead_marker']
 
 
-# Note that the football-marker arrays are based on the
+# Note that the korfball-marker arrays are based on the football-marker arrays
 # in authors other repo, but the arrays are copied here
 # https://github.com/andrewRowlinson/data-science/blob/master/data_visualization/matplotlib_football_marker.ipynb
 
