@@ -24,9 +24,9 @@ class BasePitch(ABC):
 
     Parameters
     ----------
-    pitch_type : str, default 'fullsize'
+    pitch_type : str, default 'ikf'
         The pitch type used in the plot.
-        The supported pitch types are: 'fullsize' and 'custom'.
+        The supported pitch types are: 'ikf' and 'custom'.
     half : bool, default False
         Whether to display half of the pitch.
     pitch_color : any Matplotlib color, default None
@@ -48,13 +48,6 @@ class BasePitch(ABC):
         Artists with lower zorder values are drawn first.
     spot_scale : float, default 0.002
         The size of the penalty and center spots relative to the pitch length.
-    stripe : bool, default False
-        Whether to show pitch stripes.
-    stripe_color : any Matplotlib color, default '#c2d59d'
-        The color of the pitch stripes if stripe=True
-    stripe_zorder : float, default 0.6
-        Set the zorder for the stripes (a matplotlib artist).
-         Artists with lower zorder values are drawn first.
     pad_left, pad_right : float, default None
         Adjusts the left xlim of the axis. Positive values increase the plot area,
         while negative values decrease the plot area.
@@ -63,49 +56,49 @@ class BasePitch(ABC):
         Adjusts the bottom ylim of the axis. Positive values increase the plot area,
         while negative values decrease the plot area.
         If None set to 0.04 for 'metricasports' pitch and 4 otherwise.
-    positional : bool, default False
-        Whether to draw Juego de Posición lines.
-    positional_zorder : float, default 0.8
-        Set the zorder for the Juego de Posición lines.
-         Artists with lower zorder values are drawn first.
-    positional_linewidth : float, default None
-        Linewidth for the Juego de Posición lines.
-        If None then this defaults to the same linewidth as the pitch lines (linewidth).
-    positional_linestyle : str or tuple
-        Linestyle for the Juego de Posición lines:
-         {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
-        see: https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-    positional_color : any Matplotlib color, default '#eadddd'
-        The line color for the Juego de Posición lines.
-    shade_middle : bool, default False
-         Whether to shade the middle third of the pitch.
-    shade_color : any Matplotlib color, default '#f2f2f2'
-        The fill color for the shading of the middle third of the pitch.
-    shade_zorder : float, default 0.7
-        Set the zorder for the shading of the middle third of the pitch.
-        Artists with lower zorder values are drawn first.
+
     pitch_length : float, default None
-        The pitch length in meters. Only used for the 'tracab' and 'metricasports',
-        'skillcorner', 'secondspectrum' and 'custom' pitch_type.
+        The pitch length in meters.
     pitch_width : float, default None
-        The pitch width in meters. Only used for the 'tracab' and 'metricasports',
-        'skillcorner', 'secondspectrum' and 'custom' pitch_type
-    goal_type : str, default 'line'
-        Whether to display the goals as a 'line', 'box', 'circle' or to not display it at all (None)
-    goal_alpha : float, default 1
-        The transparency of the goal.
-    goal_linestyle : str or typle
-        Linestyle for the pitch lines:
+        The pitch width in meters.
+
+    post_diameter1, post_diameter_2: float, default None
+
+    post_color: any Matplotlib color, default None
+        The color of the post circles drawn on the pitch.
+    post_alpha: float, default 1
+        The transparency of the post markings.
+    post_linestyle: str or tuple
+        Linestyle for the post lines:
         {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
         see: https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+
+    korf_diameter1, korf_diameter_2: float, default None
+
+    korf_color: any Matplotlib color, default None
+        The color of the korf rings drawn on the pitch.
+    korf_alpha: float, default 1
+        The transparency of the korf markings.
+    korf_linestyle: str or tuple
+        Linestyle for the korf lines:
+        {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
+        see: https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+
+    penalty_color: any Matplotlib color, default None
+        The color for the penalty markings.
+    penalty_linestyle : str or tuple
+        Linestyle for the penalty lines:
+        {'-', '--', '-.', ':', '', (offset, on-off-seq), ...}
+        see: https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    penalty_alpha: float, default 1
+        The transparency of the penalty markings.
     axis : bool, default False
         Whether to set the axis spines to visible.
     label : bool, default False
         Whether to include the axis labels.
     tick : bool, default False
         Whether to include the axis ticks.
-    corner_arcs : bool, default False
-        Whether to include corner arcs.
+
     """
 
     def __init__(self, pitch_type='ikf', half=False,
@@ -114,7 +107,7 @@ class BasePitch(ABC):
                  pad_left=None, pad_right=None, pad_bottom=None, pad_top=None,
                  pitch_length=None, pitch_width=None,
                  korf_color='y', korf_alpha=1, korf_linestyle=None, korf_diameter=.4,
-                 penalty_color=None, penalty_linestyle=None, penalty_alpha=0,
+                 penalty_color=None, penalty_linestyle=None, penalty_alpha=1,
                  post_color='gray', post_alpha=1, post_linestyle=None, post_diameter=0.04,
                  axis=False, label=False, tick=False):
 
@@ -127,31 +120,35 @@ class BasePitch(ABC):
         self.line_color = line_color
         if self.line_color is None:
             self.line_color = rcParams["grid.color"]
+        self.line_alpha = line_alpha
         self.linewidth = linewidth
         self.linestyle = linestyle
-        self.spot_scale = spot_scale
-        self.diameter_post1 = post_diameter
-        self.diameter_post2 = post_diameter
-        self.diameter_korf1 = korf_diameter
-        self.diameter_korf2 = korf_diameter
         self.line_zorder = line_zorder
+        self.spot_scale = spot_scale
         self.pad_left = pad_left
         self.pad_right = pad_right
         self.pad_bottom = pad_bottom
         self.pad_top = pad_top
+
         self.pitch_length = pitch_length
         self.pitch_width = pitch_width
-        # TODO Add penalty/freepass line_style, color, alpha
-        self.penalty_color = penalty_color
-        self.penalty_linestyle = penalty_linestyle
-        self.penalty_alpha = penalty_alpha
-        self.korf_color = korf_color
-        self.korf_alpha = korf_alpha
-        self.korf_linestyle = korf_linestyle
+
+        self.post_diameter1 = post_diameter
+        self.post_diameter2 = post_diameter
         self.post_color = post_color
         self.post_alpha = post_alpha
         self.post_linestyle = post_linestyle
-        self.line_alpha = line_alpha
+
+        self.korf_diameter1 = korf_diameter
+        self.korf_diameter2 = korf_diameter
+        self.korf_color = korf_color
+        self.korf_alpha = korf_alpha
+        self.korf_linestyle = korf_linestyle
+
+        self.penalty_color = penalty_color
+        self.penalty_linestyle = penalty_linestyle
+        self.penalty_alpha = penalty_alpha
+
         self.axis = axis
         self.label = label
         self.tick = tick
@@ -317,8 +314,8 @@ class BasePitch(ABC):
                                                               self.dim.center_width,
                                                               ax, radius_freepass)
 
-        (self.diameter_post1,
-         self.diameter_post2) = self._diameter_circle_equal_aspect(self.dim.post_left,
+        (self.post_diameter1,
+         self.post_diameter2) = self._diameter_circle_equal_aspect(self.dim.post_left,
                                                                    self.dim.center_width,
                                                                    ax, radius_post)
 
@@ -427,7 +424,7 @@ class BasePitch(ABC):
                            'color': self.line_color, 'zorder': self.line_zorder,
                            'linestyle': self.linestyle,
                            }
-        # TODO update penalty_line_prop with variabels
+
         penalty_line_prop = {'linewidth': self.linewidth, 'alpha': self.penalty_alpha,
                              'color': self.penalty_color, 'zorder': self.line_zorder,
                              'linestyle': self.penalty_linestyle}
@@ -493,17 +490,18 @@ class BasePitch(ABC):
 
         korf_prop = {'linewidth': self.linewidth, 'alpha': self.line_alpha,
                      'color': self.korf_color, 'zorder': self.line_zorder,
-                     'linestyle': self.korf_linestyle,
+                     'linestyle': self.korf_linestyle
                      }
 
         posts = [[self.dim.post_left, self.dim.center_width], [self.dim.post_right, self.dim.center_width]]
         korfs = [[self.dim.korf_left, self.dim.center_width], [self.dim.korf_right, self.dim.center_width]]
 
         for post in posts:
-            self._draw_ellipse(ax, post[0], post[1], self.diameter_post1, self.diameter_post2,
+            self._draw_ellipse(ax, post[0], post[1], self.post_diameter1, self.post_diameter2,
                                **post_prop)
 
         for korf in korfs:
+            # TODO Update to self.korf_radius, self.korf_thickness
             self._draw_annulus(ax, korf[0], korf[1], 0.225, 0.025,
                                **korf_prop)
 

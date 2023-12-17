@@ -643,9 +643,9 @@ class BasePitchPlot(BasePitch):
         else:
             y_dist = yend - ystart
 
-        angle = np.arctan2(y_dist, x_dist)
+        angle = np.arctan2(-y_dist, x_dist)
         # if negative angle make positive angle, so goes from 0 to 2 * pi
-        angle[angle < 0] = 2 * np.pi + angle[angle < 0]
+        #angle[angle < 0] = 2 * np.pi + angle[angle < 0]
 
         if degrees:
             # here we convert to degrees and take the negative for clockwise angles
